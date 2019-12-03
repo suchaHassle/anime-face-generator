@@ -26,7 +26,7 @@ class SuperUNet(nn.Module):
     return torch.cat([upsampled, y], 1)
 
 
-  def __init__(self, in_channel=1, out_channel=2):
+  def __init__(self, in_channel=3, out_channel=3, scale_factor=3):
     super(SuperUNet, self).__init__()
     # Contraction track
     self.contract1 = self.convolvePath(in_channel, 64)
@@ -38,7 +38,8 @@ class SuperUNet(nn.Module):
     self.upsample4 = nn.ConvTranspose2d(1024, 512, kernel_size=1, stride=1)
     self.upsample3 = nn.ConvTranspose2d(512, 256, kernel_size=1, stride=1)
     self.upsample2 = nn.ConvTranspose2d(256, 128, kernel_size=1, stride=1)
-    self.upsample1 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
+    self.upsample1 = nn.ConvTranspose2d(128, 64, kernel_size=scale_factor,
+                                        stride=scale_factor)
 
     # Expansion track
     self.expand4 = self.convolvePath(1024, 512)
